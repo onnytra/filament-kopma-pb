@@ -21,7 +21,16 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone_number',
+        'photo',
+        'status_user',
+        'jabatan_id',
+        'nia',
     ];
+
+
+
+    public $timestamps = false;
 
     /**
      * The attributes that should be hidden for serialization.
@@ -33,12 +42,19 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    public function jabatan()
+    {
+        return $this->belongsTo(Jabatan::class);
+    }
+
+    public function surats()
+    {
+        return $this->hasMany(Surat::class);
+    }
+
+    public function kirans()
+    {
+        return $this->hasMany(Kiran::class);
+    }
+    
 }
