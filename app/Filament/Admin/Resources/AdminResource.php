@@ -25,7 +25,8 @@ class AdminResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength(255),
+                    ->minLength(3)
+                    ->maxLength(100),
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
@@ -42,7 +43,7 @@ class AdminResource extends Resource
                 Forms\Components\TextInput::make('password')
                     ->password()
                     ->minLength(8)
-                    ->maxLength(255)
+                    ->maxLength(100)
                     ->revealable()
                     ->dehydrated(fn($state) => filled($state))
                     ->required(fn($livewire) => $livewire instanceof Pages\CreateAdmin),
@@ -51,7 +52,7 @@ class AdminResource extends Resource
                     ->password()
                     ->same('password')
                     ->minLength(8)
-                    ->maxLength(255)
+                    ->maxLength(100)
                     ->revealable()
                     ->dehydrated(fn($state) => filled($state))
                     ->required(fn($livewire) => $livewire instanceof Pages\CreateAdmin),
