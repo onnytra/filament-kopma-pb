@@ -18,6 +18,7 @@ return new class extends Migration
             $table->dateTime('datetime');
             $table->string('photo');
             $table->foreignId('admin_id')->constrained('admins');
+            $table->timestamps();
         });
     }
 

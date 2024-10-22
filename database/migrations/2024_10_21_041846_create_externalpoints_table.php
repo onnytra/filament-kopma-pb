@@ -16,7 +16,8 @@ return new class extends Migration
             $table->integer('point');
             $table->integer('spending');
             $table->date('date');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->timestamps();
         });
     }
 

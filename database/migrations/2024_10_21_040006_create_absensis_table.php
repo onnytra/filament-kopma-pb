@@ -17,8 +17,9 @@ return new class extends Migration
             $table->enum('status',['pending','attend','absent']);
             $table->string('photo');
             $table->integer('point');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('activity_id')->constrained('activities')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('activity_id')->constrained('activities')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->timestamps();
         });
     }
 

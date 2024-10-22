@@ -3,22 +3,24 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
-class Admin extends Model
+class Admin extends Authenticatable
 {
-    use HasFactory;
+    use HasApiTokens, HasFactory, Notifiable;
 
     public $timestamps = false;
 
     protected $table = 'admins';
 
     public $fillable = [
-        'nama',
+        'name',
         'email',
+        'role',
+        'status_admin',
         'password',
-        'photo',
-        
     ];
 
     protected $hidden = [
@@ -28,7 +30,7 @@ class Admin extends Model
 
     public function activities()
     {
-        return $this->hasMany(Activitie::class);
+        return $this->hasMany(Activity::class);
     }
 
     public function articles()

@@ -20,8 +20,9 @@ return new class extends Migration
             $table->string('description');
             $table->integer('point');
             $table->integer('voluntary_amount');
-            $table->foreignId('admin_id')->constrained('admins')->onDelete('cascade');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('admin_id')->constrained('admins');
+            $table->timestamps();
         });
     }
 

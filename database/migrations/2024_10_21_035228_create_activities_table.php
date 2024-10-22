@@ -18,7 +18,8 @@ return new class extends Migration
             $table->dateTime('datetime');
             $table->string('place');
             $table->enum('status',['pending','ongoing','done']);
-            $table->foreignId('admin_id')->constrained('admins')->onDelete('cascade');
+            $table->foreignId('admin_id')->constrained('admins');
+            $table->timestamps();
         });
     }
 

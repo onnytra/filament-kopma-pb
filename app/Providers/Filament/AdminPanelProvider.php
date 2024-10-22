@@ -25,6 +25,8 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->id('admin')
             ->path('admin')
+            ->login()
+            ->profile()
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -51,6 +53,11 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->navigationGroups([
+                'Accounts',
+                'Actions',
+            ])
+            ->authGuard('admin');
     }
 }

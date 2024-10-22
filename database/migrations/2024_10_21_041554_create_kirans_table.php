@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('kiran');
             $table->boolean('anonim');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->timestamps();
         });
     }
 
