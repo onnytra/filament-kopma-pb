@@ -22,12 +22,12 @@ class AdminScenario
     public function runTestCase($testCase)
     {
         return $this->createAdmin([
-            'name' => $testCase['name']['value'] ?? "John Doe",
-            'email' => $testCase['email']['value'] ?? Faker::create()->unique()->safeEmail(),
-            'password' => $testCase['password']['value'] ?? "password123",
-            'password_confirmation' => $testCase['password']['value'] ?? "password123",
-            'role' => 'admin',
-            'status_admin' => true
+            'name' => $testCase['name'] ?? "John Doe",
+            'email' => $testCase['email'] ?? Faker::create()->unique()->safeEmail(),
+            'password' => $testCase['password'] ?? "password123",
+            'password_confirmation' => $testCase['password'] ?? "password123",
+            'role' => $testCase['role'] ?? 'admin',
+            'status_admin' => $testCase['status_admin'] ?? true,
         ]);
     }
 }

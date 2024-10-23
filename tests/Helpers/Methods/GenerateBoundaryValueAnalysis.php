@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Helpers\Methods;
 
 use Faker\Factory as Faker;
@@ -56,12 +57,7 @@ class GenerateBoundaryValueAnalysis
     public function bvaInputMinMax($inputType, $min, $max)
     {
         $values = [
-            $min,     // Valid min
-            $min + 1, // Valid min + 1
-            $max,     // Valid max
-            $max - 1, // Valid max - 1
-            $min - 1, // Invalid below min
-            $max + 1  // Invalid above max
+            $min, $min + 1, $max, $max - 1, $min - 1, $max + 1
         ];
 
         $validities = [true, true, true, true, false, false];
@@ -70,12 +66,14 @@ class GenerateBoundaryValueAnalysis
 
     public function bvaInputN($inputType, $n, $nAsMinOrMax)
     {
-        if ($nAsMinOrMax === 'min') {
+        if ($nAsMinOrMax == 'min') {
             $values = [$n, $n + 1, $n - 1];
             $validities = [true, true, false];
-        } else {
+        } elseif ($nAsMinOrMax == 'max') {
             $values = [$n, $n - 1, $n + 1];
             $validities = [true, true, false];
+        }else{
+            return ['error' => 'Invalid parameter. Expected "min" or "max".'];
         }
 
         return $this->generateTestCases($inputType, $values, $validities);

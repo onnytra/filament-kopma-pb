@@ -4,7 +4,7 @@ namespace Tests\Helpers;
 
 use Faker\Factory as Faker;
 
-class equivalence_partitioning
+class GenerateEquivalencePartitioning
 {
     protected $faker;
 
