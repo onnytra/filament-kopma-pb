@@ -37,4 +37,9 @@ class Admin extends Authenticatable
     {
         return $this->hasMany(Article::class);
     }
+
+    public function simpanans()
+    {
+        return $this->hasMany(Simpanan::class);
+    }
 }

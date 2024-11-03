@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('point');
             $table->integer('voluntary_amount');
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('admin_id')->constrained('admins');
+            $table->foreignId('admin_id')->nullable()->constrained('admins')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }

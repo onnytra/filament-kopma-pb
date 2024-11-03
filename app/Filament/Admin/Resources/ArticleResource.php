@@ -32,12 +32,16 @@ class ArticleResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\DateTimePicker::make('datetime')
                     ->required(),
-                Forms\Components\TextInput::make('photo')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('admin_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\FileUpload::make('photo')
+                    ->directory('images/articles')
+                    ->image()
+                    ->imageEditor()
+                    ->imageEditorAspectRatios([
+                        '16:9',
+                        '4:3',
+                        '1:1',
+                    ])
+                    ->required(),
             ]);
     }
 
@@ -50,19 +54,20 @@ class ArticleResource extends Resource
                 Tables\Columns\TextColumn::make('datetime')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('photo')
+                Tables\Columns\ImageColumn::make('photo')
+                    ->square()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('admin_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('admin.name')
+                    ->label('Created By')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                // Tables\Columns\TextColumn::make('created_at')
+                //     ->dateTime()
+                //     ->sortable()
+                //     ->toggleable(isToggledHiddenByDefault: true),
+                // Tables\Columns\TextColumn::make('updated_at')
+                //     ->dateTime()
+                //     ->sortable()
+                //     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //

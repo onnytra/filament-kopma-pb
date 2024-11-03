@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Admin\Resources\SuratResource\Pages;
+namespace App\Filament\User\Resources\SuratResource\Pages;
 
-use App\Filament\Admin\Resources\SuratResource;
+use App\Filament\User\Resources\SuratResource;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
@@ -12,8 +12,8 @@ class CreateSurat extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['admin_id'] = auth()->id();
-
+        $data['user_id'] = auth()->id();
+        
         return $data;
     }
 }

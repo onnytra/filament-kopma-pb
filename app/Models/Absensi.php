@@ -27,8 +27,9 @@ class Absensi extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function activitie()
+
+    public function     activity()
     {
-        return $this->belongsTo(Activitie::class);
+        return $this->belongsTo(Activity::class);
     }
 }

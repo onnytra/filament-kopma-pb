@@ -41,13 +41,19 @@ class UserResource extends Resource
                     ->password()
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('photo')
-                    ->maxLength(255),
+                Forms\Components\FileUpload::make('photo')
+                    ->image()
+                    ->imageEditor()
+                    ->imageEditorAspectRatios([
+                        '16:9',
+                        '4:3',
+                        '1:1',
+                    ]),
                 Forms\Components\Toggle::make('status_user')
                     ->required(),
-                Forms\Components\TextInput::make('jabatan_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('jabatan_id')
+                    ->relationship('jabatan','jabatan')
+                    ->required(),
             ]);
     }
 
@@ -63,7 +69,7 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone_number')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('photo')
+                Tables\Columns\ImageColumn::make('photo')
                     ->searchable(),
                 Tables\Columns\IconColumn::make('status_user')
                     ->boolean(),

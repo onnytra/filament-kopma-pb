@@ -26,16 +26,16 @@ class ExternalpointResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('point')
-                    ->required()
-                    ->numeric(),
+                    ->integer()
+                    ->required(),
                 Forms\Components\TextInput::make('spending')
                     ->required()
-                    ->numeric(),
+                    ->integer(),
                 Forms\Components\DatePicker::make('date')
                     ->required(),
-                Forms\Components\TextInput::make('user_id')
+                Forms\Components\Select::make('user_id')
+                    ->relationship('user', 'name')
                     ->required()
-                    ->numeric(),
             ]);
     }
 
@@ -52,8 +52,8 @@ class ExternalpointResource extends Resource
                 Tables\Columns\TextColumn::make('date')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('user_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('user.name')
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
