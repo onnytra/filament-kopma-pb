@@ -20,7 +20,9 @@ class GenerateBoundaryValueAnalysis
         $this->generators = [
             'text' => fn($length) => $this->faker->lexify(str_repeat('?', $length)),
             'number' => fn($length) => $this->faker->numerify(str_repeat('?', $length)),
-            'image' => fn($size) => $this->generateImage($size)
+            'image' => fn($size) => $this->generateImage($size),
+            'file' => fn($size) => $this->generateFile($size),
+            'email' => fn($length) => $this->generateEmail($length)
         ];
     }
 
@@ -35,6 +37,21 @@ class GenerateBoundaryValueAnalysis
         fclose($handle);
 
         return $filePath;
+    }
+
+    protected function generateFile($sizeInKB)
+    {
+        $filePath = storage_path("test_file_{$sizeInKB}kb.txt");
+        $handle = fopen($filePath, 'w');
+        ftruncate($handle, $sizeInKB * 1024);
+        fclose($handle);
+        return $filePath;
+    }
+
+    protected function generateEmail($length)
+    {
+        $username = $this->faker->lexify(str_repeat('?', $length));
+        return $username . '@example.com';
     }
 
     public function generateTestCases($inputType, $values, $validities)
@@ -56,10 +73,7 @@ class GenerateBoundaryValueAnalysis
 
     public function bvaInputMinMax($inputType, $min, $max)
     {
-        $values = [
-            $min, $min + 1, $max, $max - 1, $min - 1, $max + 1
-        ];
-
+        $values = [$min, $min + 1, $max, $max - 1, $min - 1, $max + 1];
         $validities = [true, true, true, true, false, false];
         return $this->generateTestCases($inputType, $values, $validities);
     }
@@ -72,10 +86,9 @@ class GenerateBoundaryValueAnalysis
         } elseif ($nAsMinOrMax == 'max') {
             $values = [$n, $n - 1, $n + 1];
             $validities = [true, true, false];
-        }else{
+        } else {
             return ['error' => 'Invalid parameter. Expected "min" or "max".'];
         }
-
         return $this->generateTestCases($inputType, $values, $validities);
     }
 }

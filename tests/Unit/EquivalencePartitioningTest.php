@@ -4,19 +4,19 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 use App\Models\Test;
-use Tests\Helpers\Methods\GenerateBoundaryValueAnalysis;
+use Tests\Helpers\Methods\GenerateEquivalencePartitioning;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
-class BoundaryValueAnalysisTest extends TestCase
+class EquivalencePartitioningTest extends TestCase
 {
-    protected GenerateBoundaryValueAnalysis $bva;
+    protected GenerateEquivalencePartitioning $ep;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->bva = new GenerateBoundaryValueAnalysis();
+        $this->ep = new GenerateEquivalencePartitioning();
         // Start a database transaction
         DB::beginTransaction();
     }
@@ -51,7 +51,7 @@ class BoundaryValueAnalysisTest extends TestCase
         } catch (Throwable $e) {
             return [
                 'actual' => true,
-                'reason' => 'Scenario execution failed: ' . $e->getMessage(),
+                'reason' => $e->getMessage(),
             ];
         }
     }
@@ -69,7 +69,7 @@ class BoundaryValueAnalysisTest extends TestCase
         try {
             foreach ($results as $result) {
                 Test::create([
-                    'method' => 'Boundary Value Analysis',
+                    'method' => 'Equivalence Partitioning',
                     'function' => $result['function'],
                     'variable' => $result['field'],
                     'value' => $result['input'],

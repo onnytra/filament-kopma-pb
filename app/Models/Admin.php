@@ -28,6 +28,17 @@ class Admin extends Authenticatable
         'remember_token',
     ];
 
+    public static function booted(){
+        static::creating(function ($admin) {
+            $admin->password = bcrypt($admin->password);
+        });
+        static::updating(function ($admin) {
+            if ($admin->isDirty('password')) {
+                $admin->password = bcrypt($admin->password);
+            }
+        });
+    }
+
     public function activities()
     {
         return $this->hasMany(Activity::class);

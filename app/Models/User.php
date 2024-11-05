@@ -28,6 +28,16 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public static function booted(){
+        static::creating(function ($user) {
+            $user->password = bcrypt($user->password);
+        });
+        static::updating(function ($user) {
+            if ($user->isDirty('password')) {
+                $user->password = bcrypt($user->password);
+            }
+        });
+    }
     public function jabatan()
     {
         return $this->belongsTo(Jabatan::class);

@@ -25,14 +25,14 @@ class AdminResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->minLength(3)
+                    ->regex('/^[a-zA-Z\s]+$/')
                     ->maxLength(100),
                 Forms\Components\TextInput::make('email')
-                    ->email()
                     ->required()
-                    ->unique(static::getModel(), 'email', ignoreRecord: true)
-                    ->maxLength(255),
+                    ->email()
+                    ->unique(static::getModel(), 'email', ignoreRecord: true),
                 Forms\Components\Select::make('role')
+                    ->required()
                     ->options([
                         'admin' => 'Admin',
                         'sekertaris' => 'Sekertaris',
