@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\User\Resources;
 
-use App\Filament\Admin\Resources\AbsensiResource\Pages;
-use App\Filament\Admin\Resources\AbsensiResource\RelationManagers;
+use App\Filament\User\Resources\AbsensiResource\Pages;
+use App\Filament\User\Resources\AbsensiResource\RelationManagers;
 use App\Models\Absensi;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -18,7 +18,6 @@ class AbsensiResource extends Resource
     protected static ?string $model = Absensi::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = 'Actions';
 
     public static function form(Form $form): Form
     {
@@ -26,20 +25,23 @@ class AbsensiResource extends Resource
             ->schema([
                 Forms\Components\DateTimePicker::make('datetime')
                     ->required(),
-                Forms\Components\TextInput::make('status')
+                Forms\Components\Select::make('status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'attended' => 'Attended',
+                        'absent' => 'Absent',
+                    ])
                     ->required(),
-                Forms\Components\TextInput::make('photo')
-                    ->required()
-                    ->maxLength(255),
+                Forms\Components\FileUpload::make('photo')
+                    ->directory('images/absensis')
+                    ->image()
+                    ->required(),
                 Forms\Components\TextInput::make('point')
                     ->required()
-                    ->numeric(),
-                Forms\Components\Select::make('user_id')
-                    ->relationship('user','name')
+                    ->integer(),
+                Forms\Components\Select::make('activity_id')
+                    ->relationship('activity', 'activity')
                     ->required(),
-                // Forms\Components\Select::make('activity')
-                //     ->relationship('activity','activity')
-                //     ->required(),
             ]);
     }
 
@@ -50,26 +52,17 @@ class AbsensiResource extends Resource
                 Tables\Columns\TextColumn::make('datetime')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status'),
-                Tables\Columns\TextColumn::make('photo')
+                Tables\Columns\TextColumn::make('status')
+                    ->sortable(),
+                Tables\Columns\ImageColumn::make('photo')
+                    ->square()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('point')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('user_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('activity.name')
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('activity_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //

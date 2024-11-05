@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\User\Resources;
 
-use App\Filament\Admin\Resources\KiranResource\Pages;
-use App\Filament\Admin\Resources\KiranResource\RelationManagers;
+use App\Filament\User\Resources\KiranResource\Pages;
+use App\Filament\User\Resources\KiranResource\RelationManagers;
 use App\Models\Kiran;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -18,7 +18,6 @@ class KiranResource extends Resource
     protected static ?string $model = Kiran::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = 'Actions';
 
     public static function form(Form $form): Form
     {
@@ -29,10 +28,7 @@ class KiranResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Toggle::make('anonim')
                     ->required(),
-                Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'nia')
-                    ->searchable()
-                    ->required(),
+                
             ]);
     }
 
@@ -44,17 +40,6 @@ class KiranResource extends Resource
                     ->searchable(),
                 Tables\Columns\IconColumn::make('anonim')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('user_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //

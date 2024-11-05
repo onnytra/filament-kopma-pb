@@ -35,11 +35,14 @@ class ActivityResource extends Resource
                 Forms\Components\TextInput::make('place')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('status')
+                Forms\Components\Select::make('status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'ongoing' => 'Ongoing',
+                        'done' => 'Done',
+                    ])
                     ->required(),
-                Forms\Components\TextInput::make('admin_id')
-                    ->required()
-                    ->numeric(),
+
             ]);
     }
 

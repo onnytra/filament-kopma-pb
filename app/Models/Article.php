@@ -18,7 +18,7 @@ class Article extends Model
     'description',
     'datetime',
     'photo',
-    'admin_id',
+    'admin_id'
     ];
 
     public function admin()

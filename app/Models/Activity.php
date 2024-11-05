@@ -24,4 +24,9 @@ class Activity extends Model
     {
         return $this->belongsTo(Admin::class);
     }
+
+    public function activity()
+    {
+        return $this->hasMany(Activity::class);
+    }
 }

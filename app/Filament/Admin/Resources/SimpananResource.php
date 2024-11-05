@@ -26,29 +26,31 @@ class SimpananResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('amount')
                     ->required()
-                    ->numeric(),
+                    ->integer(),
                 Forms\Components\DatePicker::make('date')
                     ->required(),
                 Forms\Components\TextInput::make('proof')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('status')
+                Forms\Components\Select::make('status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'approved' => 'Approved',
+                        'rejected' => 'Rejected',
+                    ])
                     ->required(),
                 Forms\Components\TextInput::make('description')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('point')
-                    ->required()
-                    ->numeric(),
+                    ->integer()
+                    ->required(),
                 Forms\Components\TextInput::make('voluntary_amount')
                     ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('user_id')
+                    ->integer(),
+                Forms\Components\Select::make('user_id')
                     ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('admin_id')
-                    ->required()
-                    ->numeric(),
+                    ->relationship('user', 'nia'),
             ]);
     }
 
@@ -57,7 +59,6 @@ class SimpananResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('amount')
-                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('date')
                     ->date()
@@ -74,10 +75,9 @@ class SimpananResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user_id')
-                    ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('admin_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('admin.name')
+                    ->label('Created By')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
