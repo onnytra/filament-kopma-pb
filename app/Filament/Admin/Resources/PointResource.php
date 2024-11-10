@@ -2,9 +2,9 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\ExternalpointResource\Pages;
-use App\Filament\Admin\Resources\ExternalpointResource\RelationManagers;
-use App\Models\Externalpoint;
+use App\Filament\Admin\Resources\PointResource\Pages;
+use App\Filament\Admin\Resources\PointResource\RelationManagers;
+use App\Models\Point;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,29 +13,31 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class ExternalpointResource extends Resource
+class PointResource extends Resource
 {
-    protected static ?string $model = Externalpoint::class;
+    protected static ?string $model = Point::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'clarity-coin-bag-line';
     protected static ?string $navigationGroup = 'Actions';
-    protected static ?string $navigationLabel = 'Points';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('point')
-                    ->integer()
-                    ->required(),
-                Forms\Components\TextInput::make('spending')
                     ->required()
-                    ->integer(),
-                Forms\Components\DatePicker::make('date')
-                    ->required(),
-                Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'name')
+                    ->numeric(),
+                Forms\Components\Select::make('type')
                     ->required()
+                    ->options([
+                        'Simpanan' => 'Simpanan',
+                        'Pembelian' => 'Pembelian',
+                    ]),
+                Forms\Components\DateTimePicker::make('date')
+                    ->required(),
+                Forms\Components\TextInput::make('user_id')
+                    ->required()
+                    ->numeric(),
             ]);
     }
 
@@ -46,14 +48,11 @@ class ExternalpointResource extends Resource
                 Tables\Columns\TextColumn::make('point')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('spending')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('date')
-                    ->date()
+                    ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('user.name')
-                    ->searchable()
+                Tables\Columns\TextColumn::make('user_id')
+                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -87,9 +86,9 @@ class ExternalpointResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListExternalpoints::route('/'),
-            'create' => Pages\CreateExternalpoint::route('/create'),
-            'edit' => Pages\EditExternalpoint::route('/{record}/edit'),
+            'index' => Pages\ListPoints::route('/'),
+            'create' => Pages\CreatePoint::route('/create'),
+            'edit' => Pages\EditPoint::route('/{record}/edit'),
         ];
     }
 }

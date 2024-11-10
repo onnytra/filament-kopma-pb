@@ -17,7 +17,7 @@ class KiranResource extends Resource
 {
     protected static ?string $model = Kiran::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-bottom-center-text';
 
     public static function form(Form $form): Form
     {
@@ -25,10 +25,9 @@ class KiranResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('kiran')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(200),
                 Forms\Components\Toggle::make('anonim')
                     ->required(),
-                
             ]);
     }
 
@@ -51,7 +50,10 @@ class KiranResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->modifyQueryUsing(function (Builder $query) {
+                $query->where('user_id', auth()->id());
+            });
     }
 
     public static function getRelations(): array

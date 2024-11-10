@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\TestResource\Pages;
 use App\Filament\Admin\Resources\TestResource\RelationManagers;
+use App\Filament\Exports\TestExporter;
 use App\Models\Test;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -46,6 +47,9 @@ class TestResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->label('Test ID')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('method')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('function')
@@ -77,6 +81,10 @@ class TestResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+            ])
+            ->headerActions([
+                Tables\Actions\ExportAction::make()
+                    ->exporter(TestExporter::class),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -17,7 +17,7 @@ class ArticleResource extends Resource
 {
     protected static ?string $model = Article::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-newspaper';
     protected static ?string $navigationGroup = 'Actions';
 
     public static function form(Form $form): Form
@@ -27,21 +27,25 @@ class ArticleResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Textarea::make('description')
-                    ->required()
-                    ->columnSpanFull(),
                 Forms\Components\DateTimePicker::make('datetime')
                     ->required(),
+                Forms\Components\RichEditor::make('description')
+                    ->required()
+                    ->columnSpanFull(),
                 Forms\Components\FileUpload::make('photo')
-                    ->directory('images/articles')
+                    ->label('Article Header')
+                    ->required()
                     ->image()
+                    ->maxSize(2048)
+                    ->directory('article_image')
+                    ->downloadable()
+                    ->columnSpanFull()
                     ->imageEditor()
                     ->imageEditorAspectRatios([
                         '16:9',
                         '4:3',
                         '1:1',
-                    ])
-                    ->required(),
+                    ]),
             ]);
     }
 
@@ -55,19 +59,20 @@ class ArticleResource extends Resource
                     ->dateTime()
                     ->sortable(),
                 Tables\Columns\ImageColumn::make('photo')
+                    ->label('Article Header')
                     ->square()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('admin.name')
-                    ->label('Created By')
+                    ->label('Last Updated By')
                     ->sortable(),
-                // Tables\Columns\TextColumn::make('created_at')
-                //     ->dateTime()
-                //     ->sortable()
-                //     ->toggleable(isToggledHiddenByDefault: true),
-                // Tables\Columns\TextColumn::make('updated_at')
-                //     ->dateTime()
-                //     ->sortable()
-                //     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //

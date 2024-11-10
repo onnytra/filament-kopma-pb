@@ -110,10 +110,6 @@ class GenerateEquivalencePartitioning
 
     public function epSetInput(array $validSet)
     {
-        if (empty($validSet)) {
-            throw new \InvalidArgumentException("Valid set cannot be empty");
-        }
-
         $valid  = $this->faker->randomElement($validSet);
         $invalid = $this->faker->text(10);
         $testCases = [

@@ -58,6 +58,7 @@ class AdminPanelProvider extends PanelProvider
                 'Accounts',
                 'Actions',
             ])
+            ->databaseNotifications()
             ->authGuard('admin');
     }
 }

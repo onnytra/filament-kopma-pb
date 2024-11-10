@@ -13,7 +13,7 @@ class CreateAbsensi extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['user_id'] = auth()->id();
-        
+        $data['status'] = 'Pending';
         return $data;
     }
 }

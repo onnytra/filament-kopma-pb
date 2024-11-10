@@ -17,31 +17,25 @@ class AbsensiResource extends Resource
 {
     protected static ?string $model = Absensi::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-check';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\DateTimePicker::make('datetime')
-                    ->required(),
-                Forms\Components\Select::make('status')
-                    ->options([
-                        'pending' => 'Pending',
-                        'attended' => 'Attended',
-                        'absent' => 'Absent',
-                    ])
-                    ->required(),
-                Forms\Components\FileUpload::make('photo')
-                    ->directory('images/absensis')
-                    ->image()
-                    ->required(),
-                Forms\Components\TextInput::make('point')
-                    ->required()
-                    ->integer(),
+                    ->default(now())
+                    ->readOnly(),
                 Forms\Components\Select::make('activity_id')
                     ->relationship('activity', 'activity')
                     ->required(),
+                Forms\Components\FileUpload::make('photo')
+                    ->label('Proof')
+                    ->image()
+                    ->maxSize(1024)
+                    ->directory('absensi_proof')
+                    ->downloadable()
+                    ->columnSpanFull()
             ]);
     }
 
@@ -53,14 +47,16 @@ class AbsensiResource extends Resource
                     ->dateTime()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'pending' => 'warning',
+                        'approved' => 'success',
+                        'rejected' => 'danger',
+                    })
                     ->sortable(),
                 Tables\Columns\ImageColumn::make('photo')
-                    ->square()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('point')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('activity.name')
+                    ->square(),
+                Tables\Columns\TextColumn::make('activity.activity')
                     ->searchable()
                     ->sortable(),
             ])
@@ -73,8 +69,12 @@ class AbsensiResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+                ])
+            ])
+            ->modifyQueryUsing(function (Builder $query) {
+                $query->where('user_id', auth()->id());
+            })
+        ;
     }
 
     public static function getRelations(): array

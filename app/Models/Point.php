@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Externalpoint extends Model
+class Point extends Model
 {
     use HasFactory;
 
@@ -13,7 +13,7 @@ class Externalpoint extends Model
 
     protected $fillable = [
         'point',
-        'spending',
+        'type',
         'date',
         'user_id',
     ];

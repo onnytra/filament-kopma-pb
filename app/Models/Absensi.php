@@ -17,7 +17,6 @@ class Absensi extends Model
         'datetime',
         'status',
         'photo',
-        'point',
         'user_id',
         'activity_id',
     ];
@@ -28,7 +27,7 @@ class Absensi extends Model
     }
 
 
-    public function     activity()
+    public function activity()
     {
         return $this->belongsTo(Activity::class);
     }

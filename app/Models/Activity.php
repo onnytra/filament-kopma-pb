@@ -16,6 +16,8 @@ class Activity extends Model
     public $fillable = [
         'activity',
         'description',
+        'datetime',
+        'place',
         'status',
         'admin_id',
     ];

@@ -53,4 +53,8 @@ class User extends Authenticatable
         return $this->hasMany(Kiran::class);
     }
     
+    public function points()
+    {
+        return $this->hasMany(Point::class);
+    }
 }

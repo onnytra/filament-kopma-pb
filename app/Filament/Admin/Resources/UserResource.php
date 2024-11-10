@@ -25,24 +25,46 @@ class UserResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('nia')
                     ->required()
-                    ->maxLength(255),
+                    ->label('NIA')
+                    ->minLength(5)
+                    ->numeric()
+                    ->unique(static::getModel(), 'nia', ignoreRecord: true),
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength(255),
+                    ->regex('/^[a-zA-Z\s]+$/')
+                    ->maxLength(100),
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('phone_number')
-                    ->tel()
+                    ->numeric()
                     ->required()
-                    ->maxLength(20),
+                    ->minLength(10)
+                    ->maxLength(15),
                 Forms\Components\TextInput::make('password')
                     ->password()
-                    ->required()
-                    ->maxLength(255),
+                    ->minLength(8)
+                    ->maxLength(100)
+                    ->revealable()
+                    ->dehydrated(fn($state) => filled($state))
+                    ->required(fn($livewire) => $livewire instanceof Pages\CreateUser),
+                Forms\Components\TextInput::make('password_confirmation')
+                    ->label('Confirm Password')
+                    ->password()
+                    ->same('password')
+                    ->minLength(8)
+                    ->maxLength(100)
+                    ->revealable()
+                    ->dehydrated(fn($state) => filled($state))
+                    ->required(fn($livewire) => $livewire instanceof Pages\CreateUser),
                 Forms\Components\FileUpload::make('photo')
+                    ->label('Photo Profile')
                     ->image()
+                    ->maxSize(1024)
+                    ->directory('profile_image')
+                    ->downloadable()
+                    ->columnSpanFull()
                     ->imageEditor()
                     ->imageEditorAspectRatios([
                         '16:9',
@@ -52,7 +74,7 @@ class UserResource extends Resource
                 Forms\Components\Toggle::make('status_user')
                     ->required(),
                 Forms\Components\Select::make('jabatan_id')
-                    ->relationship('jabatan','jabatan')
+                    ->relationship('jabatan', 'jabatan')
                     ->required(),
             ]);
     }
@@ -69,13 +91,12 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone_number')
                     ->searchable(),
-                Tables\Columns\ImageColumn::make('photo')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('jabatan.jabatan')
+                    ->label('Jabatan')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\IconColumn::make('status_user')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('jabatan_id')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

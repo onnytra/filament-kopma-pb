@@ -17,7 +17,7 @@ class ActivityResource extends Resource
 {
     protected static ?string $model = Activity::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'clarity-talk-bubbles-line';
     protected static ?string $navigationGroup = 'Actions';
 
     public static function form(Form $form): Form
@@ -26,15 +26,12 @@ class ActivityResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('activity')
                     ->required()
-                    ->maxLength(255),
-                Forms\Components\Textarea::make('description')
-                    ->required()
-                    ->columnSpanFull(),
+                    ->maxLength(100),
                 Forms\Components\DateTimePicker::make('datetime')
                     ->required(),
                 Forms\Components\TextInput::make('place')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(100),
                 Forms\Components\Select::make('status')
                     ->options([
                         'pending' => 'Pending',
@@ -42,7 +39,12 @@ class ActivityResource extends Resource
                         'done' => 'Done',
                     ])
                     ->required(),
-
+                Forms\Components\RichEditor::make('description')
+                    ->disableToolbarButtons([
+                        'attachFiles',
+                    ])
+                    ->maxLength(1000)
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -57,9 +59,16 @@ class ActivityResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('place')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('status'),
-                Tables\Columns\TextColumn::make('admin_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'pending' => 'warning',
+                        'ongoing' => 'success',
+                        'done' => 'primary',
+                    })
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('admin.name')
+                    ->label('Last Updated By')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

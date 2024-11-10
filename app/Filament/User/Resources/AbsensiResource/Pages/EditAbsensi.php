@@ -16,4 +16,10 @@ class EditAbsensi extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $data['status'] = 'Pending';
+        return $data;
+    }
 }

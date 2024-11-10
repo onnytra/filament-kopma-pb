@@ -17,7 +17,7 @@ class JabatanResource extends Resource
 {
     protected static ?string $model = Jabatan::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-s-numbered-list';
     protected static ?string $navigationGroup = 'Accounts';
     protected static ?int $navigationSort = 1;
 
@@ -27,6 +27,7 @@ class JabatanResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('jabatan')
                     ->required()
+                    ->unique(static::getModel(), 'jabatan', ignoreRecord: true)
                     ->maxLength(20),
             ]);
     }

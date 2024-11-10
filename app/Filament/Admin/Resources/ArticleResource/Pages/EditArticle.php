@@ -16,4 +16,10 @@ class EditArticle extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $data['admin_id'] = auth()->id();
+        return $data;
+    }
 }
