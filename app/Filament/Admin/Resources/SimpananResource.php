@@ -46,21 +46,7 @@ class SimpananResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('amount')
-                    ->label('Saving')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('voluntary_amount')
-                    ->label('Voluntary Saving')
-                    ->integer(),
-                Forms\Components\FileUpload::make('proof')
-                    ->required()
-                    ->label('Proof of Transaction')
-                    ->image()
-                    ->maxSize(1024)
-                    ->directory('simpanan_proof')
-                    ->downloadable()
-                    ->columnSpanFull(),
+                // 
             ]);
     }
 

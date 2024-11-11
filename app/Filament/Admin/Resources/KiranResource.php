@@ -38,15 +38,7 @@ class KiranResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('kiran')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Toggle::make('anonim')
-                    ->required(),
-                Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'nia')
-                    ->searchable()
-                    ->required(),
+                // 
             ]);
     }
 

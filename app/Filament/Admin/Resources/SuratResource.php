@@ -46,20 +46,7 @@ class SuratResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('purpose')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Textarea::make('description')
-                    ->required()
-                    ->columnSpanFull(),
-                Forms\Components\DateTimePicker::make('datetime')
-                    ->required(),
-                Forms\Components\TextInput::make('status')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'nia')
-                    ->required(),
+                // 
             ]);
     }
 
