@@ -9,8 +9,6 @@ class Simpanan extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
-
     protected $fillable = [
         'amount',
         'date',

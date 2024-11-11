@@ -15,8 +15,6 @@ class Jabatan extends Model
         'jabatan',
     ];
 
-    public $timestamps = false;
-
     public function user()
     {
         return $this->hasMany(User::class);

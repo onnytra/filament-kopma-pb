@@ -9,8 +9,6 @@ class Kiran extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
-
     protected $fillable = [
         'kiran',
         'anonim',

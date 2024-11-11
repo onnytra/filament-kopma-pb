@@ -11,8 +11,6 @@ class Absensi extends Model
 
     protected $table = 'absensis';
 
-    public $timestamps = false;
-
     public $fillable = [
         'datetime',
         'status',

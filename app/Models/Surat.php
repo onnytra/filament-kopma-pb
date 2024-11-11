@@ -9,8 +9,6 @@ class Surat extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
-
     protected $fillable = [
         'purpose',
         'description',

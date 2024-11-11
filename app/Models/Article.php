@@ -11,8 +11,6 @@ class Article extends Model
 
     protected $table = 'articles';
 
-    public $timestamps = false;
-
     public $fillable = [
     'title',
     'description',
