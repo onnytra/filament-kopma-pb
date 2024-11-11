@@ -7,10 +7,13 @@ use App\Filament\User\Resources\SimpananResource\RelationManagers;
 use App\Models\Simpanan;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SimpananResource extends Resource
@@ -19,26 +22,40 @@ class SimpananResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
 
+
+    public static function canEdit(Model $record): bool
+    {
+        if ($record->status != 'approved') {
+            return true;
+        }
+        return false;
+    }
+    public static function canDelete(Model $record): bool
+    {
+        if ($record->status != 'approved') {
+            return true;
+        }
+        return false;
+    }
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('amount')
+                    ->label('Saving')
                     ->required()
-                    ->integer(),
-                Forms\Components\DatePicker::make('date')
-                    ->required(),
-                Forms\Components\TextInput::make('proof')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Textarea::make('description')
-                    ->required(),
-                Forms\Components\TextInput::make('point')
-                    ->required()
-                    ->integer(),
+                    ->numeric(),
                 Forms\Components\TextInput::make('voluntary_amount')
-                    ->required()
+                    ->label('Voluntary Saving')
                     ->integer(),
+                Forms\Components\FileUpload::make('proof')
+                    ->required()
+                    ->label('Proof of Transaction')
+                    ->image()
+                    ->maxSize(1024)
+                    ->directory('simpanan_proof')
+                    ->downloadable()
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -46,7 +63,36 @@ class SimpananResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('amount')
+                    ->label('Saving'),
+                Tables\Columns\TextColumn::make('voluntary_amount')
+                    ->label('Voluntary Saving'),
+                Tables\Columns\TextColumn::make('datetime')
+                    ->label('Date')
+                    ->datetime(),
+                Tables\Columns\ImageColumn::make('proof')
+                    ->label('Proof of Transaction')
+                    ->square()
+                    ->url(fn(Simpanan $record): ?string => $record->proof ? asset('storage/' . $record->proof) : null, true),
+                Tables\Columns\TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'pending' => 'warning',
+                        'approved' => 'success',
+                        'rejected' => 'danger',
+                    }),
+                Tables\Columns\TextColumn::make('admin.name')
+                    ->label('Reviewer')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
@@ -56,9 +102,23 @@ class SimpananResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->action(function (Collection $records) {
+                            foreach ($records as $record) {
+                                if ($record->status != 'approved') {
+                                    $record->delete();
+                                }
+                            }
+                            Notification::make('Successfully Deleted!')
+                                ->success()
+                                ->title('Deleted')
+                                ->send();
+                        })
                 ]),
-            ]);
+            ])
+            ->modifyQueryUsing(function (Builder $query) {
+                $query->where('user_id', auth()->id());
+            });
     }
 
     public static function getRelations(): array

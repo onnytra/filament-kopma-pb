@@ -15,6 +15,7 @@ class Absensi extends Model
         'datetime',
         'status',
         'photo',
+        'is_point',
         'user_id',
         'activity_id',
     ];

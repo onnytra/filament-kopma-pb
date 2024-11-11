@@ -7,11 +7,13 @@ use App\Filament\Admin\Resources\AbsensiResource\RelationManagers;
 use App\Models\Absensi;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -28,6 +30,17 @@ class AbsensiResource extends Resource
     }
     public static function canEdit(Model $record): bool
     {
+        if ($record->status != 'approved') {
+            return true;
+        }
+        return false;
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        if ($record->status != 'approved') {
+            return true;
+        }
         return false;
     }
     public static function form(Form $form): Form
@@ -55,7 +68,7 @@ class AbsensiResource extends Resource
                     ->sortable(),
                 Tables\Columns\ImageColumn::make('photo')
                     ->square()
-                    ->searchable(),
+                    ->url(fn(Absensi $record): ?string => $record->proof ? asset('storage/'.$record->proof) : null, true),
                 Tables\Columns\TextColumn::make('activity.activity')
                     ->searchable()
                     ->sortable(),
@@ -82,10 +95,22 @@ class AbsensiResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                    ->action(function (Collection $records) {
+                        foreach ($records as $record) {
+                            if ($record->status != 'approved') {
+                                $record->delete();
+                            }
+                        }
+                        Notification::make()
+                            ->success()
+                            ->title('Deleted')
+                            ->send();
+                    }),
                 ]),
             ]);
     }

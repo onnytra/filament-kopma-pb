@@ -9,11 +9,4 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateSimpanan extends CreateRecord
 {
     protected static string $resource = SimpananResource::class;
-
-    protected function mutateFormDataBeforeCreate(array $data): array
-    {
-        $data['admin_id'] = auth()->id();
-        
-        return $data;
-    }
 }

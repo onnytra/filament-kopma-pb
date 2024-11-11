@@ -13,12 +13,7 @@ class CreateSimpanan extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['user_id'] = auth()->id();
-
-        return $data;
-    }
-
-    protected function statusDefault(array $data): array
-    {
+        $data['datetime'] = now();
         $data['status'] = 'Pending';
         return $data;
     }

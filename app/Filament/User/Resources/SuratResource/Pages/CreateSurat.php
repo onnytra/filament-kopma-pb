@@ -13,7 +13,8 @@ class CreateSurat extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['user_id'] = auth()->id();
-        
+        $data['status'] = 'Pending';
+        $data['datetime'] = now();
         return $data;
     }
 }

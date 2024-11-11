@@ -11,12 +11,11 @@ class Simpanan extends Model
 
     protected $fillable = [
         'amount',
-        'date',
+        'datetime',
         'proof',
         'status',
-        'description',
-        'point',
         'voluntary_amount',
+        'is_point',
         'admin_id',
         'user_id',
     ];

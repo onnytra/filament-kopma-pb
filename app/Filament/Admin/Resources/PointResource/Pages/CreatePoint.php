@@ -20,7 +20,6 @@ class CreatePoint extends CreateRecord
         if (is_array($data['user_id'])) {
             $data['user_id'] = $data['user_id'][0];
         }
-        
         return $data;
     }
     protected function afterCreate(): void

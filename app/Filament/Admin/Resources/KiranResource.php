@@ -29,6 +29,11 @@ class KiranResource extends Resource
     {
         return false;
     }
+
+    public static function canDelete(Model $record): bool
+    {
+        return false;
+    }
     public static function form(Form $form): Form
     {
         return $form
@@ -70,6 +75,7 @@ class KiranResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

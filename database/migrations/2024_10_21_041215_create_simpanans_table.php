@@ -13,13 +13,12 @@ return new class extends Migration
     {
         Schema::create('simpanans', function (Blueprint $table) {
             $table->id();
-            $table->integer('amount');
-            $table->date('date');
+            $table->float('amount');
+            $table->dateTime('date');
             $table->string('proof');
             $table->enum('status', ['pending', 'approved', 'rejected']);
-            $table->string('description');
-            $table->integer('point');
-            $table->integer('voluntary_amount');
+            $table->float('voluntary_amount');
+            $table->boolean('is_point')->default(false);
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('admin_id')->nullable()->constrained('admins')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
