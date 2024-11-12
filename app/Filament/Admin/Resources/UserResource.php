@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\UserResource\Pages;
 use App\Filament\Admin\Resources\UserResource\RelationManagers;
+use App\Models\Jabatan;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -36,7 +37,7 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
-                    ->maxLength(255),
+                    ->unique(static::getModel(), 'email', ignoreRecord: true),
                 Forms\Components\TextInput::make('phone_number')
                     ->numeric()
                     ->required()
@@ -58,7 +59,7 @@ class UserResource extends Resource
                     ->revealable()
                     ->dehydrated(fn($state) => filled($state))
                     ->required(fn($livewire) => $livewire instanceof Pages\CreateUser),
-                Forms\Components\FileUpload::make('photo')
+                    Forms\Components\FileUpload::make('photo')
                     ->label('Photo Profile')
                     ->image()
                     ->maxSize(1024)
@@ -75,6 +76,7 @@ class UserResource extends Resource
                     ->required(),
                 Forms\Components\Select::make('jabatan_id')
                     ->relationship('jabatan', 'jabatan')
+                    ->exists(Jabatan::class, 'id')
                     ->required(),
             ]);
     }

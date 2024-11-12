@@ -3,15 +3,21 @@
 namespace Tests\Helpers\Methods;
 
 use Faker\Factory as Faker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class GenerateEquivalencePartitioning
 {
     protected $faker;
     protected $generators;
+    protected $allowedImageExtensions;
+    protected $allowedFileExtensions;
 
     public function __construct()
     {
         $this->faker = Faker::create();
+        $this->allowedImageExtensions = ['jpg', 'jpeg', 'png'];
+        $this->allowedFileExtensions = ['pdf', 'doc', 'docx', 'txt'];
         $this->initGenerators();
     }
 
@@ -19,13 +25,14 @@ class GenerateEquivalencePartitioning
     {
         $this->generators = [
             'text' => fn($length) => $this->faker->lexify(str_repeat('?', (int) $length)),
-            'number' => fn($length) => $this->faker->numerify(str_repeat('?', (int) $length)),
+            'number' => fn($length) => $this->faker->numerify(str_repeat('#', (int) $length)),
             'image' => fn($size) => $this->generateImage($size),
-            'pdf' => fn($size) => $this->generatePDF($size),
-            'word' => fn($size) => $this->generateWord($size),
+            'pdf' => fn($size) => $this->generateFile($size, 'pdf'),
+            'word' => fn($size) => $this->generateFile($size, 'docx'),
             'email' => fn($length) => $this->generateEmail((int) $length)
         ];
     }
+
     protected function getOppositeInputType($inputType)
     {
         $oppositeTypes = [
@@ -39,33 +46,25 @@ class GenerateEquivalencePartitioning
         ];
         return $oppositeTypes[$inputType] ?? $inputType;
     }
+
     protected function generateImage($sizeInKB)
     {
-        $image = imagecreatetruecolor(100, 100);
-        $filePath = storage_path("test_image_{$sizeInKB}kb.jpg");
-        imagejpeg($image, $filePath);
-        $handle = fopen($filePath, 'w');
-        ftruncate($handle, $sizeInKB * 1024);
-        fclose($handle);
-        return $filePath;
+        $extension = $this->faker->randomElement($this->allowedImageExtensions);
+        return UploadedFile::fake()->image(
+            "test_image_{$sizeInKB}kb.{$extension}",
+            100,
+            100,
+            $extension
+        )->size($sizeInKB);
     }
 
-    protected function generatePDF($sizeInKB)
+    protected function generateFile($sizeInKB, $type = 'pdf')
     {
-        $filePath = storage_path("test_document_{$sizeInKB}kb.pdf");
-        $handle = fopen($filePath, 'w');
-        ftruncate($handle, $sizeInKB * 1024);
-        fclose($handle);
-        return $filePath;
-    }
-
-    protected function generateWord($sizeInKB)
-    {
-        $filePath = storage_path("test_document_{$sizeInKB}kb.docx");
-        $handle = fopen($filePath, 'w');
-        ftruncate($handle, $sizeInKB * 1024);
-        fclose($handle);
-        return $filePath;
+        return UploadedFile::fake()->create(
+            "test_file_{$sizeInKB}kb.{$type}",
+            $sizeInKB,
+            "application/{$type}"
+        );
     }
 
     protected function generateEmail($length)
@@ -110,7 +109,7 @@ class GenerateEquivalencePartitioning
 
     public function epSetInput(array $validSet)
     {
-        $valid  = $this->faker->randomElement($validSet);
+        $valid = $this->faker->randomElement($validSet);
         $invalid = $this->faker->text(10);
         $testCases = [
             [
@@ -121,7 +120,7 @@ class GenerateEquivalencePartitioning
                 'value' => $invalid,
                 'isValid' => false
             ]
-            ];
+        ];
         return $testCases;
     }
 

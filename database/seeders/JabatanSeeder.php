@@ -16,5 +16,11 @@ class JabatanSeeder extends Seeder
         Jabatan::create([
             'jabatan' => 'Anggota',
         ]);
+        Jabatan::create([
+            'jabatan' => 'Ketua',
+        ]);
+        Jabatan::create([
+            'jabatan' => 'Sekretaris',
+        ]);
     }
 }
